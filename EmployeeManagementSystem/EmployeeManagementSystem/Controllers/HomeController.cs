@@ -19,5 +19,17 @@ namespace EmployeeManagementSystem.Controllers
         {
             return employeeRepository.Get(1).Name.ToString();
         }
+
+        public IActionResult Details()
+        {
+            HomeDetailsViewModel model = new HomeDetailsViewModel()
+            {
+                employee = employeeRepository.Get(1),
+                Title = "Details Page"
+
+            };
+
+            return View(model);
+        }
     }
 }
