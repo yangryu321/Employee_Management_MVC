@@ -21,5 +21,9 @@
             
         }
 
+        public IEnumerable<Employee> GetAll()
+        {
+            return employees;
+        }
     }
 }
