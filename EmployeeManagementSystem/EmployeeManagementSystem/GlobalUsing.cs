@@ -1,2 +1,2 @@
-﻿global using EmployeeManagementSystem.Models;
-global using EmployeeManagementSystem.ViewModels;
+﻿global using EmployeeManagementSystem.ViewModels;
+global using EmployeeManagementSystem.Models;
