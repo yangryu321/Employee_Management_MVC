@@ -12,7 +12,8 @@ namespace EmployeeManagementSystem.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            var model = employeeRepository.GetAll();
+            return View(model);
         }
 
         public string Try()
