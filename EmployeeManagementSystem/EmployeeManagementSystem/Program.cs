@@ -20,8 +20,9 @@ var app = builder.Build();
 app.UseStaticFiles();
 
 
-app.MapControllerRoute("default", "{controller=home}/{action=index}/{id?}");
-
+//app.MapControllerRoute("default", "{controller=home}/{action=index}/{id?}");
+app.MapControllers();
+ 
 //app.MapGet("/", () => "Hello World!");
 //app.MapGet("/Process", () =>
 //{
