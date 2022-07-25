@@ -19,7 +19,7 @@
                 <h4>Department: @employee.Department</h4>
             </div>
             <div class="card-footer text-center">
-                <a href="#" class="btn btn-primary">Edit</a>
+                <a asp-controller="Home" asp-action="Details" asp-route-Id="@employee.Id" class="btn btn-primary">Edit</a>
                 <a href="#" class="btn btn-primary">Delete</a>
             </div>
         </div>

@@ -12,14 +12,14 @@
             <div class="card-header text-center">
                 <h4>Name: @Model.employee.Name</h4>
             </div>
-            <img class="card-img-top" src="~/images/Yang.jpg" />
+            <img class="card-img-top" src="~/images/Yang.jpg"  asp-append-version="true"/>
             <div class="card-body text-center">
                 <h4>ID: @Model.employee.Id</h4>
                 <h4>Email: @Model.employee.Email</h4>
                 <h4>Department: @Model.employee.Department</h4>
             </div>
             <div class="card-footer text-center">
-                <a href="#" class="btn btn-primary">Back</a>
+                <a asp-controller="Home" asp-action="Index" asp-route-Id="@Model.employee.Id" class="btn btn-primary">Back</a>
                 <a href="#" class="btn btn-primary">Edit</a>
                 <a href="#" class="btn btn-primary">Delete</a>
             </div>
