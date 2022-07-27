@@ -10,20 +10,26 @@
         <label asp-for="Name" class="form-label"></label>
         <div class="col-sm-8">
             <input asp-for="Name" class="form-control" placeholder="Name" />
+            <span asp-validation-for="Name"  class="text-danger"></span>
         </div>
     </div>
     <div class="m-3">
         <label asp-for="Email" class="form-label"></label>
         <div class="col-sm-8">
             <input asp-for="Email" class="form-control" placeholder="Email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
         </div>
     </div>
     <div class="m-3">
         <label asp-for="Department" class="form-label"></label>
         <div class="col-sm-8">
-            <select class="form-control" asp-for="Department" asp-items="Html.GetEnumSelectList<Dpt>()"></select>
+            <select class="form-control" asp-for="Department" asp-items="Html.GetEnumSelectList<Dpt>()">
+                <option selected disabled hidden value="">Please select</option>
+            </select>
+            <span asp-validation-for="Department" class="text-danger"></span>
         </div>
     </div>
+    <div asp-validation-summary="All" class="text-danger"></div>
     <div class="m-3">
         <button class="btn btn-primary" type="submit">Create</button>
     </div>
