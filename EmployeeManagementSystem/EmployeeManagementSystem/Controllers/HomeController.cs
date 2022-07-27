@@ -55,7 +55,7 @@ namespace EmployeeManagementSystem.Controllers
                 employeeRepository.Add(model);
                 return RedirectToAction("Details", new { Id = model.Id });
             }
-            return View(model);
+            return View();
         }
     }
 }
