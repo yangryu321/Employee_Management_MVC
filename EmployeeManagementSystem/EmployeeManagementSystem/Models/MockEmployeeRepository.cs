@@ -38,5 +38,28 @@
 
             return employee;
         }
+
+        public Employee Update(Employee employee)
+        {
+            Employee model = employees.FirstOrDefault(x => x.Id == employee.Id);
+            if (model != null)
+            {
+                model.Email = employee.Email;
+                model.Department = employee.Department;
+                model.Name = employee.Name;
+            }
+
+            return employee;
+
+        }
+
+        public Employee Delete(int id)
+        {
+            Employee model = employees.FirstOrDefault(x => x.Id == id);
+            if(model != null)
+                employees.Remove(model);
+
+            return model;
+        }
     }
 }
