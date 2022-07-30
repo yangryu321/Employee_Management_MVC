@@ -1,8 +1,9 @@
 ﻿@model HomeDetailsViewModel
 
 @{ 
-    
+
     ViewBag.Title = "Details page";
+    var photo = "~/images/" + Model.employee.Photopath?? "Yang.jpg";
 }
 
 
@@ -12,7 +13,7 @@
             <div class="card-header text-center">
                 <h4>Name: @Model.employee.Name</h4>
             </div>
-            <img class="card-img-top" src="~/images/Yang.jpg"  asp-append-version="true"/>
+            <img class="card-img-top" src=@photo  asp-append-version="true"/>
             <div class="card-body text-center">
                 <h4>ID: @Model.employee.Id</h4>
                 <h4>Email: @Model.employee.Email</h4>
