@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeeManagementSystem.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20220728185812_Seed")]
-    partial class Seed
+    [Migration("20220728225540_PhotoPath")]
+    partial class PhotoPath
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,6 +43,9 @@ namespace EmployeeManagementSystem.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Photopath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Employees");
@@ -50,14 +53,14 @@ namespace EmployeeManagementSystem.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 2,
+                            Id = 1,
                             Department = 1,
                             Email = "Tomo@gmail.com",
                             Name = "Tomo"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = 2,
                             Department = 2,
                             Email = "Charlie@gmail.com",
                             Name = "Charlie"
