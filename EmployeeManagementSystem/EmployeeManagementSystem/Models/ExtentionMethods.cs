@@ -10,18 +10,19 @@ namespace EmployeeManagementSystem.Models
 
                 new Employee
                 {
-                    Id = 2,
+                    Id = 1,
                     Name = "Tomo",
                     Email = "Tomo@gmail.com",
                     Department = Dpt.Security
                 },
                 new Employee
                 {
-                    Id = 3,
+                    Id = 2,
                     Name = "Charlie",
                     Email = "Charlie@gmail.com",
                     Department = Dpt.Payroll
-                });
+                }
+                );
 
         }
     }
