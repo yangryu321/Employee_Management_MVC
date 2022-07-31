@@ -3,7 +3,7 @@
 @{ 
 
     ViewBag.Title = "Details page";
-    var photo = "~/images/" + Model.employee.Photopath?? "Yang.jpg";
+    var photo = "~/images/" + (Model.employee.Photopath?? "Yang.jpg");
 }
 
 
@@ -21,7 +21,7 @@
             </div>
             <div class="card-footer text-center">
                 <a asp-controller="Home" asp-action="Index" asp-route-Id="@Model.employee.Id" class="btn btn-primary">Back</a>
-                <a href="#" class="btn btn-primary">Edit</a>
+                <a asp-controller="Home" asp-action="Edit" asp-route-Id="@Model.employee.Id" class="btn btn-primary">Edit</a>
                 <a href="#" class="btn btn-primary">Delete</a>
             </div>
         </div>
