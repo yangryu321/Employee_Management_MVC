@@ -14,6 +14,6 @@ namespace EmployeeManagementSystem.ViewModels
         public string Email { get; set; }
         [Required]
         public Dpt? Department { get; set; }
-        public IFormFile? Photo { get; set; }
+        public IFormFile Photo { get; set; }
     }
 }

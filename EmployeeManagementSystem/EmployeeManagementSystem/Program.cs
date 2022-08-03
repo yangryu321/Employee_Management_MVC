@@ -24,9 +24,6 @@ var app = builder.Build();
 //    app.UseDeveloperExceptionPage();
 //}
 //static file middleware
-app.UseStatusCodePagesWithRedirects("/Error/{0}");
-
-
 app.UseStaticFiles();
 
 
