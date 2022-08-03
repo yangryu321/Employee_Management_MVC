@@ -2,7 +2,7 @@
 {
     public class HomeDetailsViewModel
     {
-        public Employee employee { get; set; }
+        public Employee Employee { get; set; }
         public string Title { get; set; }
     }
 }
