@@ -1,0 +1,13 @@
+﻿@model int
+
+@{
+    ViewBag.Title = "Not Found";
+}
+
+<div class="text-danger">
+    <h3>Error @Model Not Found</h3>
+    <hr />
+</div>
+<h3> @ViewBag.ErrorMessage</h3>
+<hr />
+<a asp-controller="Home" asp-action="Index" class="btn btn-outline-success">Return to Home page</a>
