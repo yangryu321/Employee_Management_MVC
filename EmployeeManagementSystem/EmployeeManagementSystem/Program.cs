@@ -18,7 +18,7 @@ var app = builder.Build();
 
 //Microsoft.AspNetCore.Hosting.IHostingEnvironment env = app.Services.GetService<Microsoft.AspNetCore.Hosting.IHostingEnvironment>(); 
 
-
+app.UseStatusCodePagesWithRedirects("Error/{0}");
 //if(env.IsDevelopment())
 //{
 //    app.UseDeveloperExceptionPage();
