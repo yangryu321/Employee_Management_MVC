@@ -34,9 +34,16 @@ namespace EmployeeManagementSystem.Controllers
         [Route("{id?}")]
         public IActionResult Details(int? id)
         {
+
+            //if the employee doesn't exist then redirect user to NotFound page
+            Employee employee = employeeRepository.Get(id.Value);
+
+            if (employee == null)
+                return View("EmployeeNotFound",id.Value);
+
             HomeDetailsViewModel model = new HomeDetailsViewModel()
             {
-                Employee = employeeRepository.Get(id??1),
+                Employee = employee,
                 Title = "Details Page"
 
             };
