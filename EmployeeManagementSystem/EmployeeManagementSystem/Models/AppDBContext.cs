@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagementSystem.Models
 {
-    public class AppDBContext : DbContext
+    public class AppDBContext : IdentityDbContext
     {
         public AppDBContext(DbContextOptions<AppDBContext> options):base(options)
         {
@@ -12,6 +13,7 @@ namespace EmployeeManagementSystem.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Seed();
         }
     }
