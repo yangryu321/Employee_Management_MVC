@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
+
+@inject SignInManager<IdentityUser> signInManager
 
 <html>
 <head>
@@ -20,8 +23,8 @@
               asp-fallback-test-property="position"
               asp-fallback-test-value="absolute"
               asp-suppress-fallback-integrity="true">
-    </environment> 
-    
+    </environment>
+
     <title>@ViewBag.Title</title>
 </head>
 <body>
@@ -40,7 +43,22 @@
                 <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Create">Create</a></li>
             </ul>
             <ul class="navbar-nav ms-auto m-1">
-                <li class="nan-item"><a class="nav-link" asp-controller="Account" asp-action="Register">Register</a></li>
+                @if (signInManager.IsSignedIn(User))
+                {
+                <li>
+                    <form method="post" asp-controller="Account" asp-action="Logout">
+                        <div class="flex-column-reverse">
+                            <button type="submit" class="nav-link btn btn-link">Sign out</button>
+                        </div>
+                    </form>
+                </li>
+                <li><a class="nav-link">@User.Identity.Name</a></li>
+                }
+                else
+                {
+                    <li class="nan-item"><a class="nav-link" asp-controller="Account" asp-action="Register">Register</a></li>
+                    <li class="nan-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Log in</a></li>
+                }
             </ul>
         </div>
     </nav>
