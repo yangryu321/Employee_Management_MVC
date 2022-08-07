@@ -26,13 +26,19 @@ namespace EmployeeManagementSystem.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Logout() 
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("Index","Home");
+        }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                IdentityUser user = new IdentityUser
+                var user = new IdentityUser
                 {
                     UserName = model.Email,
                     Email = model.Email
@@ -43,7 +49,7 @@ namespace EmployeeManagementSystem.Controllers
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, isPersistent: false);
-                    RedirectToAction(actionName: "Index", controllerName: "Home");
+                    return RedirectToAction(actionName: "index", controllerName: "home");
                 }
 
                 foreach (var error in result.Errors)
