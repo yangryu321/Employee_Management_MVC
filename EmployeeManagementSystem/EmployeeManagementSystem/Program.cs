@@ -4,10 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
 
-using NLog;
-using NLog.Web;
-using Microsoft.AspNetCore.Identity;
-
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
 
@@ -21,13 +17,16 @@ builder.Services.AddDbContext<AppDBContext>(options=>
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options=>
 {
-    options.Password.RequiredUniqueChars = 1;
-    options.Password.RequireNonAlphanumeric = true;
-})
-    .AddEntityFrameworkStores<AppDBContext>();
+    
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+
+}).AddEntityFrameworkStores<AppDBContext>();
+
+
 //builder.Services.AddSingleton<IEmployeeRepository, MockEmployeeRepository>();
-builder.Services.AddScoped<IEmployeeRepository,SqlEmployeeRepository>();
- 
+builder.Services.AddScoped<IEmployeeRepository, SqlEmployeeRepository>();
+
 
 builder.Logging.ClearProviders();
 builder.Host.UseNLog();
