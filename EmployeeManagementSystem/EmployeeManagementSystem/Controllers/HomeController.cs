@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace EmployeeManagementSystem.Controllers
 {
     
+
     [Route("[controller]/[action]")]
     public class HomeController : Controller
     {
@@ -18,6 +20,7 @@ namespace EmployeeManagementSystem.Controllers
 
         [Route("")]
         [Route("~/")]
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var model = employeeRepository.GetAll();
@@ -51,7 +54,7 @@ namespace EmployeeManagementSystem.Controllers
             return View(model);
         }
 
-        [HttpGet]
+        [HttpGet] 
         public IActionResult Create()
         {
             return View();

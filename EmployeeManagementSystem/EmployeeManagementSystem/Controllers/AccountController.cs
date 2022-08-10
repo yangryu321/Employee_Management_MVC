@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagementSystem.Controllers
@@ -21,6 +22,8 @@ namespace EmployeeManagementSystem.Controllers
 
 
         [HttpGet]
+        [AllowAnonymous]
+
         public IActionResult Register()
         {
             return View();
@@ -59,6 +62,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
@@ -66,7 +70,8 @@ namespace EmployeeManagementSystem.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if(ModelState.IsValid)
             {
@@ -74,6 +79,8 @@ namespace EmployeeManagementSystem.Controllers
 
                 if(result.Succeeded)
                 {
+                    if (!string.IsNullOrEmpty(returnUrl)&&Url.IsLocalUrl(returnUrl))
+                        return Redirect(returnUrl);
                     return RedirectToAction("Index", "Home");
                 }
 
