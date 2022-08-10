@@ -1,5 +1,7 @@
 // Dependency injection container
 
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
@@ -8,7 +10,15 @@ var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurre
 logger.Debug("init main");
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllersWithViews();
+
+builder.Services.AddControllersWithViews(options =>
+{
+    var policy = new AuthorizationPolicyBuilder()
+                                .RequireAuthenticatedUser()
+                                .Build();
+
+    options.Filters.Add(new AuthorizeFilter(policy));
+});
 
 builder.Services.AddDbContext<AppDBContext>(options=>
 {
@@ -45,6 +55,7 @@ app.UseStatusCodePagesWithReExecute("/Error/{0}");
 app.UseStaticFiles();
 
 app.UseAuthentication();
+app.UseAuthorization();
 //app.MapControllerRoute("default", "{controller=home}/{action=index}/{id?}");
 app.MapControllers();
  
