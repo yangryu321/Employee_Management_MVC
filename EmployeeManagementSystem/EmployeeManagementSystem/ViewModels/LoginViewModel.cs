@@ -1,4 +1,6 @@
-﻿namespace EmployeeManagementSystem.ViewModels
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace EmployeeManagementSystem.ViewModels
 {
     public class LoginViewModel
     {
