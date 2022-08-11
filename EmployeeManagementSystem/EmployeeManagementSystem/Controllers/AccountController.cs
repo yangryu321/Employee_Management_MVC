@@ -37,6 +37,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -71,7 +72,7 @@ namespace EmployeeManagementSystem.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl)
         {
             if(ModelState.IsValid)
             {
@@ -89,6 +90,23 @@ namespace EmployeeManagementSystem.Controllers
             }
 
             return View();
+        }
+
+        [HttpGet][HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> IsEmailExists(string email)
+        {
+
+            var result = await userManager.FindByEmailAsync(email);
+
+            if(result == null)
+            {
+                return Json(true);
+            }
+
+            return Json($"Email {email} is already is use");
+
+
         }
 
     }
