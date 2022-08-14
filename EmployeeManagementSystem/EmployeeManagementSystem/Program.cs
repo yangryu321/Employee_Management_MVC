@@ -25,7 +25,7 @@ builder.Services.AddDbContext<AppDBContext>(options=>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionStrings"));
 });
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options=>
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options=>
 {
     
     options.Password.RequireUppercase = true;
@@ -47,6 +47,8 @@ var app = builder.Build();
 //Microsoft.AspNetCore.Hosting.IHostingEnvironment env = app.Services.GetService<Microsoft.AspNetCore.Hosting.IHostingEnvironment>(); 
 
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
+
 //if(env.IsDevelopment())
 //{
 //    app.UseDeveloperExceptionPage();
