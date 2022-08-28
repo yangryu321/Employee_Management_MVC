@@ -24,7 +24,7 @@ else
                 @role.Name
             </div>
             <div class="card-footer">
-                <a class="btn btn-primary">Edit</a>
+                <a class="btn btn-primary" asp-controller="Administration" asp-action="EditRole" asp-route-Id=@role.Id>Edit</a>
                 <a class="btn btn-danger">Delete</a>
 
             </div>
