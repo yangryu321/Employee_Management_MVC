@@ -6,10 +6,12 @@ namespace EmployeeManagementSystem.Controllers
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public AdministrationController(RoleManager<IdentityRole> roleManager)
+        public AdministrationController(RoleManager<IdentityRole> roleManager,UserManager<ApplicationUser> userManager)
         {
             this.roleManager = roleManager;
+            this.userManager = userManager;
         }
         
 
@@ -49,6 +51,47 @@ namespace EmployeeManagementSystem.Controllers
         {
             var roles = roleManager.Roles.ToList();
             return View(roles);
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult> EditRole(string id)
+        {
+            var role = await roleManager.FindByIdAsync(id);
+            if(role == null)
+            {
+                ViewBag.ErrorMessage = "The role does not exist";
+                return View("NotFound");
+            }
+
+            EditRoleViewModel model = new EditRoleViewModel()
+            {
+                RoleId = id,
+                RoleName = role.Name,
+
+            };
+                
+            var users = userManager.Users.ToList();
+
+            foreach(var user in users)
+            {
+                if(await userManager.IsInRoleAsync(user,role.Name))
+                    model.Users.Add(user.UserName);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult EditRole(EditRoleViewModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                //TODO
+
+            }
+
+            return View();
         }
 
 
