@@ -83,13 +83,40 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditRole(EditRoleViewModel model)
+        public async Task<IActionResult> EditRole(EditRoleViewModel model)
         {
             if(ModelState.IsValid)
             {
                 //TODO
+           
+                var role = await roleManager.FindByIdAsync(model.RoleId);
+                if (role == null)
+                {
+                    ViewBag.ErrorMessage = "The role does not exist";
+                    return View("NotFound");
+                }
+
+                role.Name = model.RoleName;
+
+                var result = await roleManager.UpdateAsync (role);
+
+                if(result.Succeeded)
+                {
+                    return RedirectToAction(actionName: "ListRoles", controllerName: "Administration");
+                }
+
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError("", error.Description);
 
             }
+
+            return View();
+        }
+
+
+        [HttpGet]
+        public IActionResult EditUserInRole(string roleId)
+        {
 
             return View();
         }
