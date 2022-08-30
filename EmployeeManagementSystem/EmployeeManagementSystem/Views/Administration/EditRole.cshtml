@@ -9,8 +9,7 @@
 <form method="post" asp-controller="Administration" asp-action="EditRole">
     <div class="mt-3">
         <label asp-for="RoleId"></label>
-        <input disabled asp-for="RoleId" class="form-control"/>
-
+        <input asp-for="RoleId" readonly class="form-control"/>
     </div>
 
     <div class="mt-3">
@@ -19,7 +18,7 @@
         <span asp-validation-for="RoleName" class="text-danger"></span>
     </div>
     <div class="mt-3">
-        <button type="submit" class="btn btn-primary">Update</button>
+        <button type="submit" class="btn btn-primary" >Update</button>
         <a class="btn btn-primary" asp-action="ListRoles">Cancel</a>
     </div>
 
@@ -42,8 +41,8 @@
             }
         </div>
         <div class="card-footer">
-            <a class="btn btn-primary">Add Users</a>
-            <a class="btn btn-danger">Remove Users</a>
+            <a class="btn btn-primary" asp-controller="Administration" asp-action="EditUserInRole" asp-route-roleId="@Model.RoleId">Add or remove users</a>
+            <a class="btn btn-danger">Cancel</a>
 
         </div>
     </div>
