@@ -115,10 +115,40 @@ namespace EmployeeManagementSystem.Controllers
 
 
         [HttpGet]
-        public IActionResult EditUserInRole(string roleId)
+        public async Task<IActionResult> EditUserInRole(string roleId)
         {
+            List<UserRoleViewModel> roles = new List<UserRoleViewModel>();
+            var role = await roleManager.FindByIdAsync(roleId);
+            ViewBag.RoleId = roleId;
+            var users = userManager.Users.ToList();
 
-            return View();
+
+            if(role is null)
+            {
+                ViewBag.ErrorMessage = $"Role with Id {roleId} can not be found";
+                return View("NotFound");
+            }
+
+            foreach(var user in users)
+            {
+                UserRoleViewModel model = new UserRoleViewModel();
+                model.UserId = user.Id;
+                model.UserName = user.UserName;
+                //if the user is in that role, then make IsSelected true
+                if(await userManager.IsInRoleAsync(user,role.Name))
+                {
+                    model.IsSelected = true;
+                }
+                else
+                {
+                    model.IsSelected = false;
+                }
+               
+                roles.Add(model);
+             
+            }
+
+            return View(roles);
         }
 
 
