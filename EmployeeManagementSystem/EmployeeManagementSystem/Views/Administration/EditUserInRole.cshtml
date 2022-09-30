@@ -6,7 +6,7 @@
 }
 
 
-<form method="post">
+<form method="post" asp-action="EditUserInRole" asp-controller="Administration">
 
     <div class="card">
         <div class="card-header">
@@ -16,6 +16,8 @@
         <div class="card-body">
             @for (int i = 0; i < Model.Count; i++)
             {
+                <input hidden asp-for="@Model[i].UserName" />
+                <input hidden asp-for="@Model[i].UserId" />
                 <div>
                     <input asp-for="@Model[i].IsSelected" />
                     <label>@Model[i].UserName</label>
@@ -24,7 +26,7 @@
         </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="submit" class="btn btn-primary" asp-action="EditUserInRole" asp-controller="Administration" asp-route-roleId="@RoleId">Update</button>
             <a asp-action="ListRoles" asp-controller="Administration" class="btn btn-primary">Cancel</a>
         </div>
     </div>
