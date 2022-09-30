@@ -152,6 +152,38 @@ namespace EmployeeManagementSystem.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> EditUserInRole(List<UserRoleViewModel> models, string roleId)
+        {
+            if(ModelState.IsValid)
+            {
+                var role = await roleManager.FindByIdAsync(roleId);
+
+                foreach (var model in models)
+                {
+                    //reset all roles first, because if the roles are not reset, there will be duplication of data. Considering Tomo is already checked for this role
+                    //and no change is made and you are checking the IsSelected property with a foreach roop. Since tomo is already checked for this role so the method 
+                    //has already been called and will be called again this way
+                    var user = await userManager.FindByIdAsync(model.UserId);
+
+                    //need error check?
+                    await userManager.RemoveFromRoleAsync(user, role.Name);
+
+                    if (model.IsSelected)
+                    {
+                        //need error check?
+                        await userManager.AddToRoleAsync(user, role.Name);
+                    }
+
+
+
+                }
+                return RedirectToAction(actionName: "EditRole", controllerName: "Administration", new { Id = roleId });
+
+            }
+            return View();
+        }
+
 
 
     }
