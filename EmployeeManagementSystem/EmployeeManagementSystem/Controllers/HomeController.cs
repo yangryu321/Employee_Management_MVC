@@ -20,6 +20,7 @@ namespace EmployeeManagementSystem.Controllers
 
         [Route("")]
         [Route("~/")]
+        
         [AllowAnonymous]
         public IActionResult Index()
         {
