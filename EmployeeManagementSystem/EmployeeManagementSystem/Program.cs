@@ -53,12 +53,15 @@ app.UseStatusCodePagesWithReExecute("/Error/{0}");
 //{
 //    app.UseDeveloperExceptionPage();
 //}
+
 //static file middleware
 app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
 //app.MapControllerRoute("default", "{controller=home}/{action=index}/{id?}");
+
+//attribute routing
 app.MapControllers();
  
 //app.MapGet("/", () => "Hello World!");
