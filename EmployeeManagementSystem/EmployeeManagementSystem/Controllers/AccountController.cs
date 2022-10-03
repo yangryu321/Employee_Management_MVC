@@ -15,10 +15,9 @@ namespace EmployeeManagementSystem.Controllers
             this.userManager = userManager;
             this.signInManager = signInManager;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+
+
+  
 
 
         [HttpGet]
