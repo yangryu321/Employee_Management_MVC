@@ -1,7 +1,7 @@
 ﻿@model List<Employee>
 
-@{ 
-    
+@{
+
     ViewBag.Title = "Index Page";
 }
 
@@ -11,7 +11,7 @@
     {
         var photo = "~/images/" + (employee.Photopath ?? "Yang.jpg");
         <div class="card" style="min-width:18rem;max-width:30.5%;">
-            <img class="card-img-top imageThumbnail" src=@photo asp-append-version="true"/>
+            <img class="card-img-top imageThumbnail" src=@photo asp-append-version="true" />
             <div class="card-header text-center">
                 <h4>Name: @employee.Name</h4>
             </div>
@@ -23,7 +23,7 @@
             <div class="card-footer text-center">
                 <a asp-controller="Home" asp-action="Details" asp-route-Id="@employee.Id" class="btn btn-primary">View</a>
                 <a asp-controller="Home" asp-action="Edit" asp-route-Id="@employee.Id" class="btn btn-primary">Edit</a>
-                <a href="#" class="btn btn-primary">Delete</a>
+                <button class="btnShowPopup btn btn-primary" data-id="@employee.Id">Delete</button>
             </div>
         </div>
 
@@ -33,3 +33,82 @@
 
 
 
+<div id="popup-overlay" style="display: none; position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+<div id="popup-error" style="display: none; position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgb(255, 106, 0); z-index: 999;"></div>
+
+<div class="popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; padding: 20px; border: 1px solid #ccc; width: 400px; z-index: 1000;">
+    <h3>Are you sure to delete this member?</h3>
+    <p id="popupId"></p>
+    <div class="m-1">
+        <button class="btnConfirmDelete btn btn-danger">Yes</button>
+    </div>
+    <div class="m-1">
+        <button type="button" id="btnClosePopup" class="btn-primary">Cancel</button>
+    </div>
+
+</div>
+
+@section Scripts
+{
+
+    <script>
+        $(document).ready(function () {
+            $(".btnShowPopup").click(function () {
+
+                var memberId = $(this).data("id");
+
+                $("#popup-overlay").show();
+                $(".popup #popupId").text("Member ID: " + memberId);
+                $(".popup").show();
+
+                // Disable scrolling on the background page
+                $("body").css("overflow", "hidden");
+
+                $(".btnConfirmDelete").click(function () {
+
+
+                    var memberId = $(".popup #popupId").text().split(": ")[1];
+                    deleteMember(memberId);
+
+                });
+
+                function deleteMember(memberId) {
+                    $.ajax({
+                        url: "/Home/Delete",
+                        type: "POST",
+                        data: { id: memberId },
+                        success: function () {
+                            // Handle the success response
+                            $(".popup").hide();
+                            location.reload();
+                        },
+                        error: function () {
+                            $("#popup-eror").show();
+                            // Handle the error response
+                        }
+                    });
+                }
+            });
+
+            $("#popup-overlay").click(function () {
+                $("#popup-overlay").hide();
+                $(".popup").hide();
+
+                // Enable scrolling on the background page
+                $("body").css("overflow", "auto");
+            });
+
+            $("#btnClosePopup").click(function () {
+                $("#popup-overlay").hide();
+                $(".popup").hide();
+
+                // Enable scrolling on the background page
+                $("body").css("overflow", "auto");
+            });
+
+
+
+
+        });
+    </script>
+}
