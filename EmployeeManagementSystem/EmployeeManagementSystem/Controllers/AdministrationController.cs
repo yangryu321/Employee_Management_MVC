@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagementSystem.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles ="Admin")]
   
     public class AdministrationController : Controller
     {
@@ -187,6 +187,21 @@ namespace EmployeeManagementSystem.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+
+            var role = await roleManager.FindByIdAsync(id);
+
+            if(role !=null)
+            {
+                var result = await roleManager.DeleteAsync(role);
+                if (result.Succeeded)
+                    return RedirectToAction("ListRoles");
+            }
+
+            return View("NotFound");
+        }
 
     }
 }
