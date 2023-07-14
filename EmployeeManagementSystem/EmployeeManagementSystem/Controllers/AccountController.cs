@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagementSystem.Controllers
 {
-    [Route("[controller]/[action]")]
+    
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> userManager;
@@ -105,6 +105,14 @@ namespace EmployeeManagementSystem.Controllers
 
             return Json($"Email {email} is already is use");
 
+
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
 
         }
 

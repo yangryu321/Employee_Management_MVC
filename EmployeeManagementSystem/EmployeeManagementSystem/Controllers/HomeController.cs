@@ -4,9 +4,9 @@ using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace EmployeeManagementSystem.Controllers
 {
-    
 
-    [Route("[controller]/[action]")]
+
+    
     public class HomeController : Controller
     {
         private readonly IEmployeeRepository employeeRepository;
@@ -18,9 +18,8 @@ namespace EmployeeManagementSystem.Controllers
             this.hostingEnvironment = hostingEnvironment;
         }
 
-        [Route("")]
-        [Route("~/")]
-        
+       
+
         [AllowAnonymous]
         public IActionResult Index()
         {
@@ -34,8 +33,8 @@ namespace EmployeeManagementSystem.Controllers
             return employeeRepository.Get(1).Name.ToString();
         }
 
-        
-        [Route("{id?}")]
+
+    
         public IActionResult Details(int? id)
         {
 
@@ -43,7 +42,7 @@ namespace EmployeeManagementSystem.Controllers
             Employee employee = employeeRepository.Get(id.Value);
 
             if (employee == null)
-                return View("EmployeeNotFound",id.Value);
+                return View("EmployeeNotFound", id.Value);
 
             HomeDetailsViewModel model = new HomeDetailsViewModel()
             {
@@ -55,7 +54,7 @@ namespace EmployeeManagementSystem.Controllers
             return View(model);
         }
 
-        [HttpGet] 
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -64,7 +63,7 @@ namespace EmployeeManagementSystem.Controllers
         [HttpPost]
         public IActionResult Create(EmployeeCreateViewModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 string uniquefilename = ProcessUploadFile(model);
                 Employee employee = new Employee
@@ -106,7 +105,7 @@ namespace EmployeeManagementSystem.Controllers
         public IActionResult Edit(int id)
         {
             Employee employee = employeeRepository.Get(id);
-            
+
             EmployeeEditViewModel employeeEditViewModel = new EmployeeEditViewModel
             {
                 Id = id,
@@ -125,20 +124,20 @@ namespace EmployeeManagementSystem.Controllers
         [HttpPost]
         public IActionResult Edit(EmployeeEditViewModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 Employee employee = employeeRepository.Get(model.Id);
-               
+
                 employee.Name = model.Name;
                 employee.Email = model.Email;
                 employee.Department = model.Department;
 
                 //if the user uploaded a photo
-                if(model.Photo != null)
+                if (model.Photo != null)
                 {
                     //if the employee already has a photo then delete it
-                    if(model.ExistingPhotoPath != null)
-                    {                   
+                    if (model.ExistingPhotoPath != null)
+                    {
                         var filepath = Path.Combine(hostingEnvironment.WebRootPath, "images", model.ExistingPhotoPath);
                         System.IO.File.Delete(filepath);
                     }
@@ -147,10 +146,23 @@ namespace EmployeeManagementSystem.Controllers
                 }
 
                 employeeRepository.Update(employee);
-                return RedirectToAction("Details", new {Id = model.Id});
+                return RedirectToAction("Details", new { Id = model.Id });
             }
 
             return View();
         }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var employee = employeeRepository.Get(id);
+            if(employee != null)
+            {
+                employeeRepository.Delete(id);
+                return RedirectToAction("Index");
+            }
+            return View("NotFound");
+        }
     }
+    
 }
