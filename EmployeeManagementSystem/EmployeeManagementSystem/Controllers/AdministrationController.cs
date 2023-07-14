@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagementSystem.Controllers
 {
-    [Route("[controller]/[action]")]
+    [Authorize(Roles = "Admin")]
+  
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
@@ -163,7 +165,7 @@ namespace EmployeeManagementSystem.Controllers
                 {
                     //reset all roles first, because if the roles are not reset, there will be duplication of data. Considering Tomo is already checked for this role
                     //and no change is made and you are checking the IsSelected property with a foreach roop. Since tomo is already checked for this role so the method 
-                    //has already been called and will be called again this way
+                    //has already been called and will be called again
                     var user = await userManager.FindByIdAsync(model.UserId);
 
                     //need error check?
