@@ -5,12 +5,13 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
-
+//logger
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
 
 var builder = WebApplication.CreateBuilder(args);
 
+//authentication
 builder.Services.AddControllersWithViews(options =>
 {
     var policy = new AuthorizationPolicyBuilder()
@@ -20,10 +21,12 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new AuthorizeFilter(policy));
 });
 
+//
 builder.Services.AddDbContext<AppDBContext>(options=>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionStrings"));
 });
+
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options=>
 {
@@ -59,11 +62,17 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
-//app.MapControllerRoute("default", "{controller=home}/{action=index}/{id?}");
+
 
 //attribute routing
-app.MapControllers();
- 
+//app.MapControllers();
+
+//convetional routing
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=home}/{action=index}/{id?}");
+
+
 //app.MapGet("/", () => "Hello World!");
 //app.MapGet("/Process", () =>
 //{
