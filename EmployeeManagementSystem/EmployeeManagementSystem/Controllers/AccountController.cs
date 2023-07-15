@@ -51,12 +51,15 @@ namespace EmployeeManagementSystem.Controllers
 
                 if (result.Succeeded)
                 {
+                    //if the user is admin then redirect to ListUser page
+                    if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                        return RedirectToAction(actionName: "ListUsers", controllerName: "Administration");
                     await signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction(actionName: "index", controllerName: "home");
                 }
 
                 foreach (var error in result.Errors)
-                    ModelState.AddModelError("",error.Description);
+                    ModelState.AddModelError("", error.Description);
             }
             return View();
         }

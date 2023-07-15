@@ -1,0 +1,35 @@
+﻿@model List<ApplicationUser>
+
+@{
+    ViewData["Title"] = "List Users page";
+}
+
+<h1>All Users</h1>
+<div class="mb-4">
+    <a class="btn btn-primary" asp-controller="Account" asp-action="Register">Add new user</a>
+</div>
+
+
+@if (!Model.Any())
+{
+    <h1>No users yet</h1>
+}
+else
+{
+    @foreach (var user in Model)
+    {
+        <div class="card mt-1">
+            <div class="card-header">
+                <p>User Id:@user.Id</p>
+            </div>
+            <div class="card-body ">
+                <h3>@user.UserName</h3>
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-primary">Edit</a>
+                <a class="btn btn-danger">Delete</a>
+            </div>
+
+        </div>
+    }
+}
