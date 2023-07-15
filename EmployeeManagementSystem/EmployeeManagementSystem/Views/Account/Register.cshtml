@@ -6,7 +6,7 @@
     ViewBag.Title = "Register page";
 }
 
-@if (signInManager.IsSignedIn(User))
+@if (signInManager.IsSignedIn(User)&&!User.IsInRole("Admin"))
 {
     <h1>You have already signed in</h1>
 }

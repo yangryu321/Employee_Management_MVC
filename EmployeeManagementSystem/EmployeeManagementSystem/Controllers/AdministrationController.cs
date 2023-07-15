@@ -55,6 +55,12 @@ namespace EmployeeManagementSystem.Controllers
             return View(roles);
         }
 
+        [HttpGet]
+        public IActionResult ListUsers()
+        {
+            var users = userManager.Users.ToList();
+            return View(users);
+        }
 
         [HttpGet]
         public async Task<ActionResult> EditRole(string id)
