@@ -26,7 +26,7 @@ else
                 <h3>@user.UserName</h3>
             </div>
             <div class="card-footer">
-                <a class="btn btn-primary">Edit</a>
+                <a class="btn btn-primary" asp-controller="Administration" asp-action="EditUser" asp-route-Id="@user.Id">Edit</a>
                 <a class="btn btn-danger">Delete</a>
             </div>
 
