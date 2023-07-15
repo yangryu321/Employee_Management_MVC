@@ -1,0 +1,81 @@
+﻿@model EditUserViewModel
+
+@{
+    ViewData["Title"] = "Edit User page";
+}
+
+
+<h1>Edit User</h1>
+
+<form class="mt-1" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <label asp-for="Id"></label>
+        <div>
+            <input disabled asp-for="Id" />
+        </div>
+    </div>
+    <div class="row">
+        <label asp-for="Email"></label>
+        <div>
+            <input disabled asp-for="Email" />
+        </div>
+    </div>
+    <div class="row">
+        <label asp-for="UserName"></label>
+        <div >
+            <input disabled asp-for="UserName" />
+        </div>
+    </div>
+
+    <div class="mt-1">
+        <button class="btn btn-primary" type="submit">Update</button>
+        <a asp-controller="Administration" asp-action="ListUsers" class="btn btn-primary">Cancel</a>
+    </div>
+</form>
+
+<div class="card mt-1">
+    <div class="card-header">
+        <p>User Roles</p>
+    </div>
+    <div class="card-body">
+        @if (!Model.UserRoles.Any())
+        {
+            <h3>None at the moment</h3>
+        }
+        else
+        {
+            foreach (var user in Model.UserRoles)
+            {
+                <h3>@user</h3>
+            }
+
+        }
+    </div>
+    <div class="card-footer">
+        <a class="btn btn-primary">Manage Roles</a>
+    </div>
+</div>
+
+<div class="card mt-1">
+    <div class="card-header">
+        <p>User Claims</p>
+    </div>
+    <div class="card-body">
+        @if (!Model.UserRoles.Any())
+        {
+            <h3>None at the moment</h3>
+        }
+        else
+        {
+            foreach (var claim in Model.UserClaims)
+            {
+                <h3>@claim</h3>
+            }
+
+        }
+    </div>
+    <div class="card-footer">
+        <a class="btn btn-primary">Manage Claims</a>
+    </div>
+</div>
+

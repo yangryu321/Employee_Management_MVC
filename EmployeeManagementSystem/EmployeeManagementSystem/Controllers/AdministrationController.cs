@@ -209,5 +209,31 @@ namespace EmployeeManagementSystem.Controllers
             return View("NotFound");
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> EditUser(string Id)
+        {
+            var user = await userManager.FindByIdAsync(Id);
+            var roles = await userManager.GetRolesAsync(user);
+            var claims = await userManager.GetClaimsAsync(user);
+
+            var viewmodel = new EditUserViewModel()
+            {
+                Id = Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                UserClaims = claims.Select(c=>c.Value).ToList(),
+                UserRoles = (List<string>)roles
+            };
+
+
+            //Todo make the edituser page prettier  
+            if (user != null)
+                return View(viewmodel);
+            else
+                return View("NotFound");
+        }
+
+
     }
 }
