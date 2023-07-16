@@ -1,0 +1,42 @@
+﻿@model List<RolesInUser>
+
+@{ 
+    
+    ViewData["Title"] = "Manage roles page";
+
+}
+
+<form method="post" enctype="multipart/form-data">
+    <div class="card">
+        <div class="card-header">
+            <p>Manage User Roles</p>
+        </div>
+        <div class="card-body">
+            @if (!Model.Any())
+            {
+                <p1>No roles for this user yet</p1>
+            }
+            else
+            {
+                @for (int i = 0; i < Model.Count(); i++)
+                {
+
+                    <input hidden asp-for="@Model[i].RoleId" />
+                    <input hidden asp-for="@Model[i].RoleName" />
+                    <div>
+                        <input asp-for="@Model[i].IsSelected" />
+                        <label>@Model[i].RoleName</label>
+                    </div>
+
+
+                }
+            }
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-primary" type="submit" >Update</button>
+            <a class="btn btn-primary" asp-controller="Administration" asp-action="EditUserInrole">Cancel</a>
+        </div>
+
+    </div>
+
+</form>

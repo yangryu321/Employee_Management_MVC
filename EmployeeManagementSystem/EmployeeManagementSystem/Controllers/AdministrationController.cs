@@ -235,5 +235,69 @@ namespace EmployeeManagementSystem.Controllers
         }
 
 
+        //TODO2
+        [HttpPost]
+        public IActionResult EditUser(EditUserViewModel viewModel)
+        {
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ManageRoles(string Id)
+        {
+            //dont need to pass userId through viewdata here?
+            //ViewData["Id"] = Id;
+            var user = await userManager.FindByIdAsync(Id);
+            var roles = roleManager.Roles.ToList();
+            var viewmodel = new List<RolesInUser>();
+
+            foreach(var role in roles)
+            {
+                var model = new RolesInUser();
+                model.RoleId = role.Id;
+                model.RoleName = role.Name;
+
+                if(await userManager.IsInRoleAsync(user,role.Name))
+                {
+                    model.IsSelected = true;
+                     
+                }
+                else
+                {
+                    model.IsSelected = false;
+                }
+                viewmodel.Add(model);
+            }
+            
+            return View(viewmodel);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ManageRoles(List<RolesInUser> viewmodel, string Id)
+         {
+            //todo 7.15
+            var user = await userManager.FindByIdAsync(Id);
+
+            //reset all the roles first
+
+            foreach (var role in viewmodel)
+            {
+                await userManager.RemoveFromRoleAsync(user, role.RoleName);
+                if (role.IsSelected)
+                {
+                    await userManager.AddToRoleAsync(user, role.RoleName);
+                }
+
+            }
+
+
+
+            return RedirectToAction("EditUser", new { Id = Id });
+
+        }
+
     }
 }
+
