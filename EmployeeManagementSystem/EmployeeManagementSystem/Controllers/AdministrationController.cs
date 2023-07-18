@@ -1,21 +1,22 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EmployeeManagementSystem.Controllers
 {
-    [Authorize(Roles ="Admin")]
-  
+    [Authorize(Roles = "Admin")]
+
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public AdministrationController(RoleManager<IdentityRole> roleManager,UserManager<ApplicationUser> userManager)
+        public AdministrationController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
         }
-        
+
 
         [HttpGet]
         public IActionResult CreateRole()
@@ -39,13 +40,13 @@ namespace EmployeeManagementSystem.Controllers
                 if (result.Succeeded)
                     return RedirectToAction(actionName: "ListRoles", controllerName: "Administration");
 
-                foreach(var error in result.Errors)
-                    ModelState.AddModelError("",error.Description);
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError("", error.Description);
 
             }
 
             return View();
-        } 
+        }
 
 
         [HttpGet]
@@ -66,7 +67,7 @@ namespace EmployeeManagementSystem.Controllers
         public async Task<ActionResult> EditRole(string id)
         {
             var role = await roleManager.FindByIdAsync(id);
-            if(role == null)
+            if (role == null)
             {
                 ViewBag.ErrorMessage = "The role does not exist";
                 return View("NotFound");
@@ -78,12 +79,12 @@ namespace EmployeeManagementSystem.Controllers
                 RoleName = role.Name,
 
             };
-                
+
             var users = userManager.Users.ToList();
 
-            foreach(var user in users)
+            foreach (var user in users)
             {
-                if(await userManager.IsInRoleAsync(user,role.Name))
+                if (await userManager.IsInRoleAsync(user, role.Name))
                     model.Users.Add(user.UserName);
             }
 
@@ -93,10 +94,10 @@ namespace EmployeeManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> EditRole(EditRoleViewModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 //TODO
-           
+
                 var role = await roleManager.FindByIdAsync(model.RoleId);
                 if (role == null)
                 {
@@ -106,9 +107,9 @@ namespace EmployeeManagementSystem.Controllers
 
                 role.Name = model.RoleName;
 
-                var result = await roleManager.UpdateAsync (role);
+                var result = await roleManager.UpdateAsync(role);
 
-                if(result.Succeeded)
+                if (result.Succeeded)
                 {
                     return RedirectToAction(actionName: "ListRoles", controllerName: "Administration");
                 }
@@ -131,19 +132,19 @@ namespace EmployeeManagementSystem.Controllers
             var users = userManager.Users.ToList();
 
 
-            if(role is null)
+            if (role is null)
             {
                 ViewBag.ErrorMessage = $"Role with Id {roleId} can not be found";
                 return View("NotFound");
             }
 
-            foreach(var user in users)
+            foreach (var user in users)
             {
                 UserRoleViewModel model = new UserRoleViewModel();
                 model.UserId = user.Id;
                 model.UserName = user.UserName;
                 //if the user is in that role, then make IsSelected true
-                if(await userManager.IsInRoleAsync(user,role.Name))
+                if (await userManager.IsInRoleAsync(user, role.Name))
                 {
                     model.IsSelected = true;
                 }
@@ -151,9 +152,9 @@ namespace EmployeeManagementSystem.Controllers
                 {
                     model.IsSelected = false;
                 }
-               
+
                 roles.Add(model);
-             
+
             }
 
             return View(roles);
@@ -163,7 +164,7 @@ namespace EmployeeManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> EditUserInRole(List<UserRoleViewModel> models, string roleId)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var role = await roleManager.FindByIdAsync(roleId);
 
@@ -199,7 +200,7 @@ namespace EmployeeManagementSystem.Controllers
 
             var role = await roleManager.FindByIdAsync(id);
 
-            if(role !=null)
+            if (role != null)
             {
                 var result = await roleManager.DeleteAsync(role);
                 if (result.Succeeded)
@@ -222,7 +223,7 @@ namespace EmployeeManagementSystem.Controllers
                 Id = Id,
                 UserName = user.UserName,
                 Email = user.Email,
-                UserClaims = claims.Select(c=>c.Value).ToList(),
+                UserClaims = claims.Select(c => c.Value).ToList(),
                 UserRoles = (List<string>)roles
             };
 
@@ -235,5 +236,120 @@ namespace EmployeeManagementSystem.Controllers
         }
 
 
+        
+        [HttpPost]
+        public IActionResult EditUser(EditUserViewModel viewModel)
+        {
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ManageRoles(string Id)
+        {
+            //dont need to pass userId through viewdata here?
+            //ViewData["Id"] = Id;
+            var user = await userManager.FindByIdAsync(Id);
+            var roles = roleManager.Roles.ToList();
+            var viewmodel = new List<RolesInUser>();
+
+            foreach (var role in roles)
+            {
+                var model = new RolesInUser();
+                model.RoleId = role.Id;
+                model.RoleName = role.Name;
+
+                if (await userManager.IsInRoleAsync(user, role.Name))
+                {
+                    model.IsSelected = true;
+
+                }
+                else
+                {
+                    model.IsSelected = false;
+                }
+                viewmodel.Add(model);
+            }
+
+            return View(viewmodel);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ManageRoles(List<RolesInUser> viewmodel, string Id)
+        {
+            //todo 7.15
+            var user = await userManager.FindByIdAsync(Id);
+
+            //reset all the roles first
+
+            foreach (var role in viewmodel)
+            {
+                await userManager.RemoveFromRoleAsync(user, role.RoleName);
+                if (role.IsSelected)
+                {
+                    await userManager.AddToRoleAsync(user, role.RoleName);
+                }
+
+            }
+
+
+
+            return RedirectToAction("EditUser", new { Id = Id });
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ManageClaims(string Id)
+        {
+            var user = await userManager.FindByIdAsync(Id);
+            var existingClaims = await userManager.GetClaimsAsync(user);
+
+            var models = new List<UserClaimsViewModel>();
+
+            foreach (var claim in ClaimStore.AllClaims)
+            {
+                var model = new UserClaimsViewModel()
+                {
+                    //no need to pass Id here cause of model binding
+                    //UserId = user.Id,
+                    ClaimType = claim.Type,
+                    IsSelected = false
+                };
+
+                //if the user has any claim in of the current claim in the loop
+                if (existingClaims.Any(c => c.Type == claim.Type))
+                {
+                    model.IsSelected = true;
+                }
+                models.Add(model);
+            }
+            return View(models);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ManageClaims(List<UserClaimsViewModel> viewModel, string Id)
+        {
+            var user = await userManager.FindByIdAsync(Id);
+
+            var claims = await userManager.GetClaimsAsync(user);
+            await userManager.RemoveClaimsAsync(user, claims);    
+
+            foreach (var model in viewModel)
+            {
+                if (model.IsSelected)
+                {
+                    var result = await userManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimType));
+
+                    if (!result.Succeeded)
+                        return View(viewModel);
+                }
+
+            }
+
+            return RedirectToAction("EditUser", new {Id = Id}); 
+        }
+
     }
 }
+

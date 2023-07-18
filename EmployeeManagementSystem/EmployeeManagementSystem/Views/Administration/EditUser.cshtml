@@ -52,7 +52,7 @@
         }
     </div>
     <div class="card-footer">
-        <a class="btn btn-primary">Manage Roles</a>
+        <a class="btn btn-primary" asp-controller="administration" asp-action="ManageRoles" asp-route-Id="@Model.Id">Manage Roles</a>
     </div>
 </div>
 
@@ -61,7 +61,7 @@
         <p>User Claims</p>
     </div>
     <div class="card-body">
-        @if (!Model.UserRoles.Any())
+        @if (!Model.UserClaims.Any())
         {
             <h3>None at the moment</h3>
         }
@@ -75,7 +75,7 @@
         }
     </div>
     <div class="card-footer">
-        <a class="btn btn-primary">Manage Claims</a>
+        <a class="btn btn-primary" asp-action="ManageClaims" asp-controller="Administration" asp-route-Id="@Model.Id">Manage Claims</a>
     </div>
 </div>
 
