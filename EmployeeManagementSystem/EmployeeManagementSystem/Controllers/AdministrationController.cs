@@ -236,7 +236,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
 
-        //TODO2
+        
         [HttpPost]
         public IActionResult EditUser(EditUserViewModel viewModel)
         {
