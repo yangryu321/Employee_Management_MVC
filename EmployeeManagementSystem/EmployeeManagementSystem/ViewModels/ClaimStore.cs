@@ -8,7 +8,8 @@ namespace EmployeeManagementSystem.ViewModels
         {
             new Claim("Delete Role","Delete Role"),
             new Claim("Edit Role", "Edit ROle"),
-            new Claim("Create Role", "Create Role")
+            new Claim("Create Role", "Create Role"),
+            new Claim("Delete User", "Delete User")
         };
 
     }
