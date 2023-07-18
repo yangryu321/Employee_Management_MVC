@@ -4,8 +4,9 @@ using System.Security.Claims;
 
 namespace EmployeeManagementSystem.Controllers
 {
-    [Authorize(Roles = "Admin")]
 
+    [Authorize(Roles = "Admin, Super Admin")]
+    
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
@@ -19,11 +20,13 @@ namespace EmployeeManagementSystem.Controllers
 
 
         [HttpGet]
+        [Authorize(Policy ="Create Role")]
         public IActionResult CreateRole()
         {
             return View();
         }
 
+        [Authorize(Policy = "Create Role")]
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
         {
@@ -64,6 +67,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy ="Edit Role")]
         public async Task<ActionResult> EditRole(string id)
         {
             var role = await roleManager.FindByIdAsync(id);
@@ -92,6 +96,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "Edit Role")]
         public async Task<IActionResult> EditRole(EditRoleViewModel model)
         {
             if (ModelState.IsValid)
@@ -195,6 +200,7 @@ namespace EmployeeManagementSystem.Controllers
 
 
         [HttpPost]
+        //delete role
         public async Task<IActionResult> Delete(string id)
         {
 
@@ -223,7 +229,7 @@ namespace EmployeeManagementSystem.Controllers
                 Id = Id,
                 UserName = user.UserName,
                 Email = user.Email,
-                UserClaims = claims.Select(c => c.Value).ToList(),
+                UserClaims = claims.Select(c => c.Type +" : "+c.Value).ToList(),
                 UserRoles = (List<string>)roles
             };
 
@@ -240,7 +246,23 @@ namespace EmployeeManagementSystem.Controllers
         [HttpPost]
         public IActionResult EditUser(EditUserViewModel viewModel)
         {
+            //todo
+            return View();
+        }
 
+
+        [HttpPost]
+        [Authorize(Policy = "Delete User")]
+        public async Task<IActionResult> DeleteUser(string Id)
+        {
+            var user = await userManager.FindByIdAsync(Id);
+            if(user != null)
+            {
+                var result = await userManager.DeleteAsync(user);
+
+                if (result.Succeeded)
+                    return RedirectToAction("ListUsers");
+            }
             return View();
         }
 
@@ -304,6 +326,7 @@ namespace EmployeeManagementSystem.Controllers
         {
             var user = await userManager.FindByIdAsync(Id);
             var existingClaims = await userManager.GetClaimsAsync(user);
+            
 
             var models = new List<UserClaimsViewModel>();
 
@@ -317,8 +340,8 @@ namespace EmployeeManagementSystem.Controllers
                     IsSelected = false
                 };
 
-                //if the user has any claim in of the current claim in the loop
-                if (existingClaims.Any(c => c.Type == claim.Type))
+                //if the user has any claim in of the current claim type and the value if true
+                if (existingClaims.Any(c => c.Type == claim.Type && c.Value =="true"))
                 {
                     model.IsSelected = true;
                 }
@@ -339,7 +362,14 @@ namespace EmployeeManagementSystem.Controllers
             {
                 if (model.IsSelected)
                 {
-                    var result = await userManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimType));
+                    var result = await userManager.AddClaimAsync(user, new Claim(model.ClaimType, "true"));
+
+                    if (!result.Succeeded)
+                        return View(viewModel);
+                }
+                else
+                {
+                    var result = await userManager.AddClaimAsync(user, new Claim(model.ClaimType, "false"));
 
                     if (!result.Succeeded)
                         return View(viewModel);
