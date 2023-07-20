@@ -1,5 +1,6 @@
 // Dependency injection container
 
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,8 @@ builder.Services.AddAuthorization(options =>
       context.User.IsInRole("Admin") && context.User.HasClaim(claim => claim.Type == "Delete User" && claim.Value == "true") ||
       context.User.IsInRole("Super Admin")
       ));
+
+    options.AddPolicy("CannotEditYourself", policy => policy.AddRequirements(new ManageAdminRoleAndClaimsRequirement()));
 });
  
 
@@ -58,7 +61,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options=>
 
 //builder.Services.AddSingleton<IEmployeeRepository, MockEmployeeRepository>();
 builder.Services.AddScoped<IEmployeeRepository, SqlEmployeeRepository>();
-
+builder.Services.AddSingleton<IAuthorizationHandler, CannotEditOwnRolesAndClaimsHandler>();
+//builder.Services.AddSingleton<IAuthorizationHandler, MultihanderTest>();
 
 builder.Logging.ClearProviders();
 builder.Host.UseNLog();
