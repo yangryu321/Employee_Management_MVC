@@ -267,6 +267,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CannotEditYourself")]
         public async Task<IActionResult> ManageRoles(string Id)
         {
             //dont need to pass userId through viewdata here?
@@ -298,6 +299,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CannotEditYourself")]
         public async Task<IActionResult> ManageRoles(List<RolesInUser> viewmodel, string Id)
         {
             //todo 7.15
@@ -322,6 +324,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CannotEditYourself")]
         public async Task<IActionResult> ManageClaims(string Id)
         {
             var user = await userManager.FindByIdAsync(Id);
@@ -351,6 +354,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CannotEditYourself")]
         public async Task<IActionResult> ManageClaims(List<UserClaimsViewModel> viewModel, string Id)
         {
             var user = await userManager.FindByIdAsync(Id);
