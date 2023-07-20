@@ -244,10 +244,43 @@ namespace EmployeeManagementSystem.Controllers
 
         
         [HttpPost]
-        public IActionResult EditUser(EditUserViewModel viewModel)
+        public async Task<IActionResult> EditUser(EditUserViewModel viewModel)
         {
-            //todo
-            return View();
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.FindByIdAsync(viewModel.Id);
+                user.UserName = viewModel.UserName;
+                user.Email = viewModel.Email;
+              
+                //var roles = viewModel.UserRoles;
+                //await userManager.AddToRolesAsync(user, roles);
+               
+
+                //var claims = viewModel.UserClaims;
+                //foreach(var claim in claims)
+                //{
+                //    var splitClaim = claim.Split(':');
+                //    if (splitClaim.Length == 2)
+                //    {
+                //        var claimType = splitClaim[0].Trim();
+                //        var claimValue = splitClaim[1].Trim();
+                //        var newclaim = new Claim(claimType, claimValue);
+
+                //        // Add the claim to the user
+                //        await userManager.AddClaimAsync(user, newclaim);
+                //    }
+
+                //}
+
+                var result = await userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("ListUsers");
+                }
+                
+            }
+
+            return View(viewModel);
         }
 
 
