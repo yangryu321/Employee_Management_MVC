@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace EmployeeManagementSystem.Security
 {
-    public class CannotEditOwnRolesAndClaimsHandler : 
+    public class CannotEditOwnRolesAndClaimsHandler :
         AuthorizationHandler<ManageAdminRoleAndClaimsRequirement>
     {
         private readonly IHttpContextAccessor httpContextAccessor;
@@ -16,14 +16,14 @@ namespace EmployeeManagementSystem.Security
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
             ManageAdminRoleAndClaimsRequirement requirement)
         {
-            
+
             //get the id of the logged in user
             string loggedInAdminId = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             //get the id of the user being edited
             //todo
             string userBeingEditedId = httpContextAccessor.HttpContext.GetRouteData().Values["Id"].ToString();
 
-            if(userBeingEditedId.ToLower()!= loggedInAdminId.ToLower())
+            if (userBeingEditedId.ToLower() != loggedInAdminId.ToLower())
             {
                 context.Succeed(requirement);
             }
@@ -31,4 +31,18 @@ namespace EmployeeManagementSystem.Security
             return Task.CompletedTask;
         }
     }
+
+    public class MultihanderTest : AuthorizationHandler<ManageAdminRoleAndClaimsRequirement>
+    {
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ManageAdminRoleAndClaimsRequirement requirement)
+        {
+            if (context.User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value != "test@yang.com").FirstOrDefault())
+            {
+                context.Succeed(requirement);
+            }
+
+            return Task.CompletedTask;
+        }
+    }
+
 }

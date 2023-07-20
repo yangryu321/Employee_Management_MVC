@@ -62,6 +62,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options=>
 //builder.Services.AddSingleton<IEmployeeRepository, MockEmployeeRepository>();
 builder.Services.AddScoped<IEmployeeRepository, SqlEmployeeRepository>();
 builder.Services.AddSingleton<IAuthorizationHandler, CannotEditOwnRolesAndClaimsHandler>();
+//builder.Services.AddSingleton<IAuthorizationHandler, MultihanderTest>();
 
 builder.Logging.ClearProviders();
 builder.Host.UseNLog();
