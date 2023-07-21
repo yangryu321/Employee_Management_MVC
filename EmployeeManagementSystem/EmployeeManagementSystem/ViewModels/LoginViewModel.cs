@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagementSystem.ViewModels
 {
@@ -14,5 +15,8 @@ namespace EmployeeManagementSystem.ViewModels
 
         [Display(Name = "Remember me")]
         public bool RememberMe { get; set; }
+
+        public string? ReturnUrl { get; set; }
+        public List<AuthenticationScheme> ExternaLogins { get; set; }
     }
 }

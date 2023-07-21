@@ -23,6 +23,12 @@ builder.Services.AddControllersWithViews(options =>
 });
 
 
+builder.Services.AddAuthentication().AddGoogle(options =>
+{
+    options.ClientId = "602647198473-aio3kn0oqrd4lele19tas7lopf4rdvk5.apps.googleusercontent.com";
+    options.ClientSecret = "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";
+});
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Create Role", policy =>policy.RequireClaim("Create Role", "true"));
