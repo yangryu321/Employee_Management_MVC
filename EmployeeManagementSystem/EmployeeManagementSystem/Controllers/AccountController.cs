@@ -153,7 +153,9 @@ namespace EmployeeManagementSystem.Controllers
             }
             else
             {
-                var email = info.Principal.FindFirst(ClaimTypes.Email).Value;
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+
+                var userId = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
 
                 if (email != null)
                 {
@@ -180,6 +182,32 @@ namespace EmployeeManagementSystem.Controllers
 
                     return LocalRedirect(returnUrl);
 
+                }
+                
+                if(userId !=null)
+                {
+                    var user = await userManager.FindByIdAsync(userId);
+                    //user does't have an account 
+                    if (user == null)
+                    {
+                        //Create an local account 
+                        user = new ApplicationUser()
+                        {
+                            Id = userId,
+                            UserName = info.Principal.FindFirst(ClaimTypes.Name).Value
+
+                    };
+
+                        await userManager.CreateAsync(user);
+                    }
+
+                    //add user info to userLogins table
+                    await userManager.AddLoginAsync(user, info);
+
+                    //sign the user in with its local account
+                    await signInManager.SignInAsync(user, isPersistent: false);
+
+                    return LocalRedirect(returnUrl);
                 }
 
 

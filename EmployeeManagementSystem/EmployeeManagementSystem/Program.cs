@@ -27,6 +27,10 @@ builder.Services.AddAuthentication().AddGoogle(options =>
 {
     options.ClientId = "602647198473-aio3kn0oqrd4lele19tas7lopf4rdvk5.apps.googleusercontent.com";
     options.ClientSecret = "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";
+}).AddTwitter(options=>
+{
+    options.ConsumerKey = "VIfexcQZM5uh0hfVA0afBB2ZL";
+    options.ConsumerSecret = "M5htPbEtqbam2YKKlfkvXLb7rxXuuBqbEJLndM0iYxjoSwR2lf";
 });
 
 builder.Services.AddAuthorization(options =>
