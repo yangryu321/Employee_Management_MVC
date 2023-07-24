@@ -17,6 +17,6 @@ namespace EmployeeManagementSystem.ViewModels
         public bool RememberMe { get; set; }
 
         public string? ReturnUrl { get; set; }
-        public List<AuthenticationScheme> ExternaLogins { get; set; }
+        public List<AuthenticationScheme> ExternaLogins { get; set; } = new List<AuthenticationScheme>();
     }
 }

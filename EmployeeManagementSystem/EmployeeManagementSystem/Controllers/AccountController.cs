@@ -10,11 +10,13 @@ namespace EmployeeManagementSystem.Controllers
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly ILogger<AccountController> logger;
 
-        public AccountController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager, ILogger<AccountController> logger)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.logger = logger;
         }
 
 
@@ -50,19 +52,54 @@ namespace EmployeeManagementSystem.Controllers
 
                 var result = await userManager.CreateAsync(user,model.Password);
 
+
                 if (result.Succeeded)
                 {
+                    //generate token
+                    var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //generate email confirmation link
+                    var confirmationLink = Url.Action("ConfirmEmail", "Account", new { token = token, userId = user.Id });
+
+                    logger.Log(logLevel: LogLevel.Warning, confirmationLink);
                     //if the user is admin then redirect to ListUser page
                     if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                         return RedirectToAction(actionName: "ListUsers", controllerName: "Administration");
-                    await signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction(actionName: "index", controllerName: "home");
+
+                    //redirect to confirmation page
+                    return View("EmailConfirmation");
                 }
 
                 foreach (var error in result.Errors)
                     ModelState.AddModelError("", error.Description);
             }
             return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string token, string userId)
+        {
+            if(token ==null || userId ==null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            //get the user
+            var user = await userManager.FindByIdAsync(userId);
+            if(user == null)
+            {
+                return View("NotFound");
+            }
+
+            //check the token if valid
+            var result = await userManager.ConfirmEmailAsync(user,token);
+
+            if(result.Succeeded)
+            {
+                return View();
+            }
+
+            return View("NotFound");
         }
 
         [HttpGet]
@@ -83,22 +120,34 @@ namespace EmployeeManagementSystem.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl)
         {
-            if(ModelState.IsValid)
+            model.ExternaLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            if (ModelState.IsValid)
             {
+                //check if the user email is not confirmed, then block user login
+                var user = await userManager.FindByEmailAsync(model.Email);
+
+                if (user != null && user.EmailConfirmed != true && (await userManager.CheckPasswordAsync(user, model.Password)))
+                {
+                    ModelState.AddModelError(string.Empty, "Email is not confirmed");
+                    return View(model);
+
+                }
+
                 var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
 
-                if(result.Succeeded)
+                if (result.Succeeded)
                 {
-                    if (!string.IsNullOrEmpty(returnUrl)&&Url.IsLocalUrl(returnUrl))
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                         return Redirect(returnUrl);
                     return RedirectToAction("Index", "Home");
                 }
 
                 ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
 
+
             }
 
-            return View();
+            return View(model);
         }
 
         [HttpPost]
@@ -138,7 +187,7 @@ namespace EmployeeManagementSystem.Controllers
             var info = await signInManager.GetExternalLoginInfoAsync();
 
             if(info == null)
-            {
+            { 
                 ModelState.AddModelError(string.Empty, $"Error loading external login information");
                 return View("Login", viewmodel);
             }
