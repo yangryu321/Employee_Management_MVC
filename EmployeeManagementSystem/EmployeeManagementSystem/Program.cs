@@ -57,6 +57,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddDbContext<AppDBContext>(options=>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionStrings"));
+   
 });
 
 
@@ -66,7 +67,10 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options=>
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = false;
 
-}).AddEntityFrameworkStores<AppDBContext>();
+    //need to confirm email
+    options.SignIn.RequireConfirmedEmail = true;
+
+}).AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders();
 
 
 //builder.Services.AddSingleton<IEmployeeRepository, MockEmployeeRepository>();
