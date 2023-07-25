@@ -290,5 +290,55 @@ namespace EmployeeManagementSystem.Controllers
 
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Forgotpassword()
+        {
+            
+            return View();
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Forgotpassword(ForgotPasswordViewModel viewModel)
+        {
+            
+            if(ModelState.IsValid)
+            {
+                //check if the email is valid?
+                var user = await userManager.FindByEmailAsync(viewModel.Email);
+                //if the user is not null and the email is confirmed
+                if(user!=null&&(await userManager.IsEmailConfirmedAsync(user)))
+                {
+
+                    //generate token
+                    var token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+                    //generate password reset link
+                    var passwordResetLink = Url.Action("ResetPassword","Account", 
+                        new {token= token, userId=user.Id},Request.Scheme);
+
+                    logger.Log(LogLevel.Warning, passwordResetLink);
+
+                    return View("ForgotpasswordConfirmation");
+                   
+                }
+
+                return View("ForgotpasswordConfirmation");
+
+            }
+
+            //if it is then send a link to email to reset password?
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
     }
 }
