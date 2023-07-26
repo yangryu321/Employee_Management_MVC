@@ -60,12 +60,6 @@ builder.Services.AddDbContext<AppDBContext>(options=>
    
 });
 
-builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
-{
-    //set the token life span to 5 hours
-    options.TokenLifespan = TimeSpan.FromHours(5);
-});
-
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options=>
 {
@@ -76,8 +70,22 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options=>
     //need to confirm email
     options.SignIn.RequireConfirmedEmail = true;
 
-}).AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders();
+    //use the custom token provider instead of the default one token provider
+    options.Tokens.EmailConfirmationTokenProvider = "CustomEmailTokenProvider";
 
+}).AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders()
+.AddTokenProvider<CustomEmailConfirmationTokenProvider<ApplicationUser>>("CustomEmailTokenProvider");
+
+builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+{
+    //set the token life span to 5 hours
+    options.TokenLifespan = TimeSpan.FromHours(5);
+});
+
+builder.Services.Configure<CustomEmailConfirmationTokenProviderOptions>(options =>
+{
+    options.TokenLifespan = TimeSpan.FromHours(1);
+});
 
 //builder.Services.AddSingleton<IEmployeeRepository, MockEmployeeRepository>();
 builder.Services.AddScoped<IEmployeeRepository, SqlEmployeeRepository>();
