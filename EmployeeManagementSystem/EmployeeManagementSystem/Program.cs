@@ -1,6 +1,5 @@
 // Dependency injection container
 
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -91,6 +90,7 @@ builder.Services.Configure<CustomEmailConfirmationTokenProviderOptions>(options 
 builder.Services.AddScoped<IEmployeeRepository, SqlEmployeeRepository>();
 builder.Services.AddSingleton<IAuthorizationHandler, CannotEditOwnRolesAndClaimsHandler>();
 //builder.Services.AddSingleton<IAuthorizationHandler, MultihanderTest>();
+builder.Services.AddSingleton<DataProtectionPurposStrings>();
 
 builder.Logging.ClearProviders();
 builder.Host.UseNLog();

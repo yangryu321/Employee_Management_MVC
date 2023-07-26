@@ -1,4 +1,4 @@
-﻿@model List<Employee>
+﻿@model IEnumerable<Employee>
 
 @{
 
@@ -21,7 +21,7 @@
                 <h4>Department: @employee.Department</h4>
             </div>
             <div class="card-footer text-center">
-                <a asp-controller="Home" asp-action="Details" asp-route-Id="@employee.Id" class="btn btn-primary">View</a>
+                <a asp-controller="Home" asp-action="Details" asp-route-Id="@employee.EncryptedId" class="btn btn-primary">View</a>
                 <a asp-controller="Home" asp-action="Edit" asp-route-Id="@employee.Id" class="btn btn-primary">Edit</a>
                 <button class="btnShowPopup btn btn-primary" data-id="@employee.Id">Delete</button>
             </div>
