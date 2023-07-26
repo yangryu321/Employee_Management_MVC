@@ -335,10 +335,45 @@ namespace EmployeeManagementSystem.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ResetPassword()
+        public IActionResult ResetPassword(string token, string userId)
         {
-            return View();
+            var viewmodel = new ResetPasswordViewModel()
+            {
+                UserId = userId,
+                Token = token
+            };
+
+
+            return View(viewmodel);
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel viewModel)
+        {
+            if(ModelState.IsValid)
+            {
+                var user = await userManager.FindByIdAsync(viewModel.UserId);
+                if (user != null)
+                {
+                    var result = await userManager.ResetPasswordAsync(user, viewModel.Token, viewModel.ConfirmPassword);
+
+                    if(result.Succeeded)
+                    {
+                        return View("ResetPassworConfirmation");
+
+                    }
+
+                    foreach(var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View(viewModel);
+                    
+                }
+            }
+
+            return View(viewModel);
+        }
     }
 }

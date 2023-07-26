@@ -60,6 +60,12 @@ builder.Services.AddDbContext<AppDBContext>(options=>
    
 });
 
+builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+{
+    //set the token life span to 5 hours
+    options.TokenLifespan = TimeSpan.FromHours(5);
+});
+
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options=>
 {
