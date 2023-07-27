@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
@@ -11,11 +12,16 @@ namespace EmployeeManagementSystem.Controllers
     {
         private readonly IEmployeeRepository employeeRepository;
         private readonly IHostingEnvironment hostingEnvironment;
+        private readonly IDataProtector protector;
 
-        public HomeController(IEmployeeRepository employeeRepository, IHostingEnvironment hostingEnvironment)
+        public HomeController(IEmployeeRepository employeeRepository,
+            IHostingEnvironment hostingEnvironment, IDataProtectionProvider dataProtectionProvider,
+            DataProtectionPurposStrings dataProtectionPurposStrings)
         {
             this.employeeRepository = employeeRepository;
             this.hostingEnvironment = hostingEnvironment;
+            protector = dataProtectionProvider.CreateProtector(dataProtectionPurposStrings.EmployeeRouteDPSring);
+                
         }
 
        
@@ -23,7 +29,12 @@ namespace EmployeeManagementSystem.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            var model = employeeRepository.GetAll();
+            var model = employeeRepository.GetAll().
+                Select(c =>
+                {
+                    c.EncryptedId = protector.Protect(c.Id.ToString());
+                    return c;
+                });
             return View(model);
         }
 
@@ -35,14 +46,15 @@ namespace EmployeeManagementSystem.Controllers
 
 
     
-        public IActionResult Details(int? id)
+        public IActionResult Details(string id)
         {
+            int decrypedid = Convert.ToInt32(protector.Unprotect(id));
 
             //if the employee doesn't exist then redirect user to NotFound page
-            Employee employee = employeeRepository.Get(id.Value);
+            Employee employee = employeeRepository.Get(decrypedid);
 
             if (employee == null)
-                return View("EmployeeNotFound", id.Value);
+                return View("EmployeeNotFound", decrypedid);
 
             HomeDetailsViewModel model = new HomeDetailsViewModel()
             {
