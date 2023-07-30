@@ -72,6 +72,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options=>
     //use the custom token provider instead of the default one token provider
     options.Tokens.EmailConfirmationTokenProvider = "CustomEmailTokenProvider";
 
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+
 }).AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders()
 .AddTokenProvider<CustomEmailConfirmationTokenProvider<ApplicationUser>>("CustomEmailTokenProvider");
 
