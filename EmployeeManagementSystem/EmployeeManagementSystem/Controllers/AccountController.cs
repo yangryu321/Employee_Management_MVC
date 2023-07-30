@@ -133,7 +133,7 @@ namespace EmployeeManagementSystem.Controllers
 
                 }
 
-                var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+                var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, true);
 
                 if (result.Succeeded)
                 {
@@ -141,6 +141,9 @@ namespace EmployeeManagementSystem.Controllers
                         return Redirect(returnUrl);
                     return RedirectToAction("Index", "Home");
                 }
+
+                if (result.IsLockedOut)
+                    return View("LockedOut");
 
                 ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
 
@@ -301,7 +304,7 @@ namespace EmployeeManagementSystem.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Forgotpassword(ForgotPasswordViewModel viewModel)
+        public async Task<IActionResult>  Forgotpassword(ForgotPasswordViewModel viewModel)
         {
             
             if(ModelState.IsValid)
@@ -360,6 +363,9 @@ namespace EmployeeManagementSystem.Controllers
 
                     if(result.Succeeded)
                     {
+                        //if the user is locked out, reset the lock out
+                        if(await userManager.IsLockedOutAsync(user))
+                            await userManager.SetLockoutEndDateAsync(user, DateTime.UtcNow);
                         return View("ResetPassworConfirmation");
 
                     }
@@ -411,6 +417,47 @@ namespace EmployeeManagementSystem.Controllers
             }
             return View(viewModel);
 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddPassword()
+        {
+            var user = await userManager.GetUserAsync(User);
+            
+            var userHasPassword = await userManager.HasPasswordAsync(user);
+
+            if(userHasPassword == true)
+            {
+                return RedirectToAction("ChangePassword");
+            }
+
+
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddPassword(AddPasswordViewModel viewModel)
+        {
+           if(ModelState.IsValid)
+            {
+                var user = await userManager.GetUserAsync(User);
+
+                var result = await userManager.AddPasswordAsync(user, viewModel.Password);
+
+                if(result == null)
+                {
+                    foreach(var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                        return View();
+                    }
+                }
+                await signInManager.RefreshSignInAsync(user);
+                return View("AddPasswordConfirmation");
+            }
+
+            return View();
         }
     }
 }
