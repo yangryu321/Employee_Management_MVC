@@ -365,7 +365,7 @@ namespace EmployeeManagementSystem.Controllers
                     {
                         //if the user is locked out, reset the lock out
                         if(await userManager.IsLockedOutAsync(user))
-                            await userManager.SetLockoutEndDateAsync(user, DateTime.UtcNow);
+                            await userManager.SetLockoutEndDateAsync(user, DateTime.UtcNow); 
                         return View("ResetPassworConfirmation");
 
                     }
