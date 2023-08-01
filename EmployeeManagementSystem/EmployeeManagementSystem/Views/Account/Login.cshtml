@@ -37,9 +37,12 @@ else
                         <input asp-for="RememberMe" />
                     </div>
 
-                    <button type="submit" class="m-3 btn btn-primary">Login</button>
+                    <div >
+                        <button type="submit" class="m-3 btn btn-primary">Login</button>
+                        <a class="btn-link" asp-action="Forgotpassword">Forgot password?</a>
+                    </div>
+                    
                 </form>
-                <a class="btn-link" asp-action="Forgotpassword">Forgot password?</a>
             </div>
         </div>
         <div class="col-md-6">
