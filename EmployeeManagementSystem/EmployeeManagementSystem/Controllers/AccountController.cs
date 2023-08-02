@@ -402,9 +402,9 @@ namespace EmployeeManagementSystem.Controllers
                     return View("login");
                 }
 
-                var result = await userManager.ChangePasswordAsync(user, viewModel.CurrentPassword, viewModel.ComfirmPassword);
+                var result = await userManager.ChangePasswordAsync(user, viewModel.CurrentPassword, viewModel.NewPassword);
 
-                if (result == null)
+                if (!result.Succeeded)
                 {
                     foreach(var error in result.Errors)
                         ModelState.AddModelError("",error.Description);

@@ -29,23 +29,37 @@ namespace EmployeeManagementSystem.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            var model = employeeRepository.GetAll().
-                Select(c =>
-                {
-                    c.EncryptedId = protector.Protect(c.Id.ToString());
-                    return c;
-                });
-            return View(model);
+            //var model = employeeRepository.GetAll().
+            //    Select(c =>
+            //    {
+            //        c.EncryptedId = protector.Protect(c.Id.ToString());
+            //        return c;
+            //    });
+            //return View(model);
+
+            return View("MainPage");
         }
 
-        [Route("Try")]
-        public string Try()
+        [AllowAnonymous]
+        public IActionResult List()
         {
-            return employeeRepository.Get(1).Name.ToString();
+            var model = employeeRepository.GetAll().
+               Select(c =>
+               {
+                   c.EncryptedId = protector.Protect(c.Id.ToString());
+                   return c;
+               });
+            
+            return View("Index",model);
         }
+        //[Route("Try")]
+        //public string Try()
+        //{
+        //    return employeeRepository.Get(1).Name.ToString();
+        //}
 
 
-    
+
         public IActionResult Details(string id)
         {
             int decrypedid = Convert.ToInt32(protector.Unprotect(id));
