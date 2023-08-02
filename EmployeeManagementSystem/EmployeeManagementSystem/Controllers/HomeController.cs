@@ -29,15 +29,29 @@ namespace EmployeeManagementSystem.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            var model = employeeRepository.GetAll().
-                Select(c =>
-                {
-                    c.EncryptedId = protector.Protect(c.Id.ToString());
-                    return c;
-                });
-            return View(model);
+            //var model = employeeRepository.GetAll().
+            //    Select(c =>
+            //    {
+            //        c.EncryptedId = protector.Protect(c.Id.ToString());
+            //        return c;
+            //    });
+            //return View(model);
+
+            return View("MainPage");
         }
 
+        [AllowAnonymous]
+        public IActionResult List()
+        {
+            var model = employeeRepository.GetAll().
+               Select(c =>
+               {
+                   c.EncryptedId = protector.Protect(c.Id.ToString());
+                   return c;
+               });
+            
+            return View("Index",model);
+        }
         //[Route("Try")]
         //public string Try()
         //{
@@ -45,7 +59,7 @@ namespace EmployeeManagementSystem.Controllers
         //}
 
 
-    
+
         public IActionResult Details(string id)
         {
             int decrypedid = Convert.ToInt32(protector.Unprotect(id));

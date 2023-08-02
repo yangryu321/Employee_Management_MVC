@@ -1,7 +1,11 @@
 ﻿@model List<ApplicationUser>
+@inject SignInManager<ApplicationUser> signInManager
+@inject UserManager<ApplicationUser> userManager
+
 
 @{
     ViewData["Title"] = "List Users page";
+    ApplicationUser currentUser;
 }
 
 <h1>All Users</h1>
@@ -18,19 +22,24 @@ else
 {
     @foreach (var user in Model)
     {
-        <div class="card mt-1">
-            <div class="card-header">
-                <p>User Id:@user.Id</p>
-            </div>
-            <div class="card-body ">
-                <h3>@user.UserName</h3>
-            </div>
-            <div class="card-footer">
-                <a class="btn btn-primary" asp-controller="Administration" asp-action="EditUser" asp-route-Id="@user.Id">Edit</a>
-                <button class="btnShowPopup btn btn-danger" data-id="@user.Id">Delete</button>
-            </div>
+        //if the user is not super admin
+        @if (!(await userManager.IsInRoleAsync(user, "Super Admin")))
+        {
+            <div class="card mt-1">
+                <div class="card-header">
+                    <p>User Id:@user.Id</p>
+                </div>
+                <div class="card-body ">
+                    <h3>@user.UserName</h3>
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-primary" asp-controller="Administration" asp-action="EditUser" asp-route-Id="@user.Id">Edit</a>
+                    <button class="btnShowPopup btn btn-danger" data-id="@user.Id">Delete</button>
+                </div>
 
-        </div>
+            </div>
+            }
+
     }
 }
 
