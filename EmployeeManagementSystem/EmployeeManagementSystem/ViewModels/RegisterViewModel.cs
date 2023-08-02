@@ -10,7 +10,7 @@ namespace EmployeeManagementSystem.ViewModels
         [Required]
         [EmailAddress]
         [Remote(action: "IsEmailExists", controller: "Account")]
-        [ValidEmailDomianValidation(alloweddomain:"yang.com",ErrorMessage = "Email domin must be yang.com")]
+        //[ValidEmailDomianValidation(alloweddomain:"yang.com",ErrorMessage = "Email domin must be yang.com")]
         public string Email { get; set; }
 
         [Required]
