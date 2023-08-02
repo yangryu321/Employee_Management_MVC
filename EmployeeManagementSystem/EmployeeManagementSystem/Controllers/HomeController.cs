@@ -38,11 +38,11 @@ namespace EmployeeManagementSystem.Controllers
             return View(model);
         }
 
-        [Route("Try")]
-        public string Try()
-        {
-            return employeeRepository.Get(1).Name.ToString();
-        }
+        //[Route("Try")]
+        //public string Try()
+        //{
+        //    return employeeRepository.Get(1).Name.ToString();
+        //}
 
 
     
