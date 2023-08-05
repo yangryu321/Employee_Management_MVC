@@ -94,6 +94,8 @@ builder.Services.AddScoped<IEmployeeRepository, SqlEmployeeRepository>();
 builder.Services.AddSingleton<IAuthorizationHandler, CannotEditOwnRolesAndClaimsHandler>();
 //builder.Services.AddSingleton<IAuthorizationHandler, MultihanderTest>();
 builder.Services.AddSingleton<DataProtectionPurposStrings>();
+//Dependency injection for email service
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Logging.ClearProviders();
 builder.Host.UseNLog();
