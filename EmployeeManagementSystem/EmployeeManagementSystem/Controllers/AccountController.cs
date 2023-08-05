@@ -11,12 +11,16 @@ namespace EmployeeManagementSystem.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ILogger<AccountController> logger;
+        private readonly IEmailService emailService;
 
-        public AccountController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager, ILogger<AccountController> logger)
+        public AccountController(UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager, ILogger<AccountController> logger,
+            IEmailService emailService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.logger = logger;
+            this.emailService = emailService;
         }
 
 
@@ -58,9 +62,27 @@ namespace EmployeeManagementSystem.Controllers
                     //generate token
                     var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
                     //generate email confirmation link
-                    var confirmationLink = Url.Action("ConfirmEmail", "Account", new { token = token, userId = user.Id });
+                    //var confirmationLink = Url.Action("ConfirmEmail", "Account", new { token = token, userId = user.Id });
+                    var confirmationLink = $"https://localhost:44334/Account/ConfirmEmail?token={token}&userId={user.Id}";
 
-                    logger.Log(logLevel: LogLevel.Warning, confirmationLink);
+
+                    var emailSubject = "Confirm Your Email";
+                    var emailBody = $"Click the link below to confirm your email:\n{confirmationLink}";
+
+                    var isEmailSent = emailService.SendEmailAsync(model.Email, emailSubject, emailBody).Result;
+
+                    if (isEmailSent)
+                    {
+                        return Ok("Registration successful. Please check your email for the confirmation link.");
+                    }
+                    else
+                    {
+                        // Handle the case when the email sending failed
+                        // Maybe show an error message to the user or retry the email sending
+                        return StatusCode(500, "Failed to send the email. Please try again later.");
+                    }
+
+                      logger.Log(logLevel: LogLevel.Warning, confirmationLink);
                     //if the user is admin then redirect to ListUser page
                     if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                         return RedirectToAction(actionName: "ListUsers", controllerName: "Administration");
@@ -72,7 +94,7 @@ namespace EmployeeManagementSystem.Controllers
                 foreach (var error in result.Errors)
                     ModelState.AddModelError("", error.Description);
             }
-            return View();
+            return View(model);
         }
 
         [HttpGet]
