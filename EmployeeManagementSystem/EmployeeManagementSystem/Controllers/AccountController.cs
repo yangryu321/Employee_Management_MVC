@@ -62,12 +62,12 @@ namespace EmployeeManagementSystem.Controllers
                     //generate token
                     var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
                     //generate email confirmation link
-                    //var confirmationLink = Url.Action("ConfirmEmail", "Account", new { token = token, userId = user.Id });
-                    var confirmationLink = $"https://localhost:44334/Account/ConfirmEmail?token={token}&userId={user.Id}";
+                    var confirmationLink = Url.Action("ConfirmEmail", "Account", new { token = token, userId = user.Id });
+                    var Link = $"https://localhost:44334" + confirmationLink;
 
 
                     var emailSubject = "Confirm Your Email";
-                    var emailBody = $"Click the link below to confirm your email:\n{confirmationLink}";
+                    var emailBody = $"Click the link below to confirm your email:\n{Link}";
 
                     var isEmailSent = emailService.SendEmailAsync(model.Email, emailSubject, emailBody).Result;
 
