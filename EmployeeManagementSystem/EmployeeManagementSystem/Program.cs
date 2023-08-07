@@ -36,6 +36,8 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Create Role", policy =>policy.RequireClaim("Create Role", "true"));
 
+    options.AddPolicy("Delete Role", policy => policy.RequireClaim("Delete Role", "true"));
+
     options.AddPolicy("Edit Role", policy => policy.RequireAssertion(context =>
         context.User.IsInRole("Admin") && context.User.HasClaim(claim => claim.Type == "Edit Role" && claim.Value == "true") ||
         context.User.IsInRole("Super Admin")
