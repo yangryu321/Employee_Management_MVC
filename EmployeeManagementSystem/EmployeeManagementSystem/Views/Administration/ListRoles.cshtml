@@ -36,7 +36,7 @@ else
 <div id="popup-overlay" style="display: none; position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
 
 <div class="popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; padding: 20px; border: 1px solid #ccc; width: 400px; z-index: 1000;">
-    <h3>Are you sure to delete this member?</h3>
+    <h3>Are you sure to delete this role?</h3>
     <p id="popupId"></p>
     <div class="m-1">
         <button class="btnConfirmDelete btn btn-danger">Yes</button>
@@ -57,7 +57,7 @@ else
                 var memberId = $(this).data("id");
 
                 $("#popup-overlay").show();
-                $(".popup #popupId").text("Member ID: " + memberId);
+                $(".popup #popupId").text("Role ID: " + memberId);
                 $(".popup").show();
 
                 // Disable scrolling on the background page
@@ -81,9 +81,14 @@ else
                             $(".popup").hide();
                             location.reload();
                         },
-                        error: function () {
-                            $("#popup-eror").show();
-                            // Handle the error response
+                        error: function (xhr) {
+                            if (xhr.status == 403) {
+                                // Access Denied, redirect to the Access Denied action
+                                window.location.href = "/Account/AccessDenied";
+                            } else {
+                                // Handle other error scenarios
+                                $("#popup-error").show();
+                            }
                         }
                     });
                 }

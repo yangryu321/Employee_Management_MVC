@@ -200,6 +200,7 @@ namespace EmployeeManagementSystem.Controllers
 
 
         [HttpPost]
+        [Authorize(Policy = "Delete Role")]
         //delete role
         public async Task<IActionResult> Delete(string id)
         {

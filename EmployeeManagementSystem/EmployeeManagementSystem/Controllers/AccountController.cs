@@ -161,7 +161,7 @@ namespace EmployeeManagementSystem.Controllers
                 {
                     if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                         return Redirect(returnUrl);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("List", "Home");
                 }
 
                 if (result.IsLockedOut)
@@ -193,7 +193,7 @@ namespace EmployeeManagementSystem.Controllers
         public async Task<IActionResult> ExternalLogInCallback(string returnUrl=null, 
             string remoteError = null)
         {
-             returnUrl = returnUrl ?? Url.Content("~/");
+             returnUrl = returnUrl ?? Url.Content("~/Home/List");
 
             var viewmodel = new LoginViewModel()
             {

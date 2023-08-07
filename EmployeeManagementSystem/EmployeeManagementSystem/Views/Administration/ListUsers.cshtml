@@ -93,7 +93,7 @@ else
                             location.reload();
                         },
                         error: function (xhr) {
-                            if (xhr.status === 403) {
+                            if (xhr.status == 403) {
                                 // Access Denied, redirect to the Access Denied action
                                 window.location.href = "/Account/AccessDenied";
                             } else {
