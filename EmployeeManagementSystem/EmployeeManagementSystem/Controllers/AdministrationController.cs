@@ -394,7 +394,6 @@ namespace EmployeeManagementSystem.Controllers
 
         [HttpPost]
         [Authorize(Policy = "CannotEditYourself")]
-
         public async Task<IActionResult> ManageClaims(List<UserClaimsViewModel> viewModel, string Id)
         {
             var user = await userManager.FindByIdAsync(Id);
