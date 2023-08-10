@@ -172,7 +172,8 @@ namespace EmployeeManagementSystem.Controllers
                 }
 
                 employeeRepository.Update(employee);
-                return RedirectToAction("Details", new { Id = model.Id });
+                return RedirectToAction("Details", new { Id = protector.Protect((model.Id).ToString())});
+            
             }
 
             return View();
