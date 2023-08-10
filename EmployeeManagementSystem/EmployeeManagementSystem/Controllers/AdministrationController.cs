@@ -67,7 +67,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy ="Edit Role")]
+        [Authorize(Roles = "Super Admin")]
         public async Task<ActionResult> EditRole(string id)
         {
             var role = await roleManager.FindByIdAsync(id);
@@ -96,7 +96,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "Edit Role")]
+        [Authorize(Roles = "Super Admin")]
         public async Task<IActionResult> EditRole(EditRoleViewModel model)
         {
             if (ModelState.IsValid)
@@ -129,6 +129,7 @@ namespace EmployeeManagementSystem.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Super Admin")]
         public async Task<IActionResult> EditUserInRole(string roleId)
         {
             List<UserRoleViewModel> roles = new List<UserRoleViewModel>();
@@ -167,6 +168,7 @@ namespace EmployeeManagementSystem.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Super Admin")]
         public async Task<IActionResult> EditUserInRole(List<UserRoleViewModel> models, string roleId)
         {
             if (ModelState.IsValid)
@@ -302,6 +304,7 @@ namespace EmployeeManagementSystem.Controllers
 
         [HttpGet]
         [Authorize(Policy = "CannotEditYourself")]
+        [Authorize(Roles = "Super Admin")]
         public async Task<IActionResult> ManageRoles(string Id)
         {
             //dont need to pass userId through viewdata here?
@@ -334,6 +337,7 @@ namespace EmployeeManagementSystem.Controllers
 
         [HttpPost]
         [Authorize(Policy = "CannotEditYourself")]
+        [Authorize(Roles = "Super Admin")]
         public async Task<IActionResult> ManageRoles(List<RolesInUser> viewmodel, string Id)
         {
             //todo 7.15
@@ -359,6 +363,7 @@ namespace EmployeeManagementSystem.Controllers
 
         [HttpGet]
         [Authorize(Policy = "CannotEditYourself")]
+      
         public async Task<IActionResult> ManageClaims(string Id)
         {
             var user = await userManager.FindByIdAsync(Id);
