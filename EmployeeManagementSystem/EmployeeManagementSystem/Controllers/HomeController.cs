@@ -180,6 +180,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Super Admin")]
         public IActionResult Delete(int id)
         {
             var employee = employeeRepository.Get(id);
