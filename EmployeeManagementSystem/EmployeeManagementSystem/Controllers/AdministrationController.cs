@@ -62,7 +62,7 @@ namespace EmployeeManagementSystem.Controllers
         [HttpGet]
         public IActionResult ListUsers()
         {
-            //todo Might need to delete the database and build it from scrach
+            
             var users = userManager.Users.ToList();
             return View(users);
         }
@@ -102,7 +102,7 @@ namespace EmployeeManagementSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                //TODO
+                
 
                 var role = await roleManager.FindByIdAsync(model.RoleId);
                 if (role == null)
@@ -238,7 +238,7 @@ namespace EmployeeManagementSystem.Controllers
             };
 
 
-            //Todo make the edituser page prettier  
+            
             if (user != null)
                 return View(viewmodel);
             else
@@ -341,7 +341,7 @@ namespace EmployeeManagementSystem.Controllers
         [Authorize(Roles = "Super Admin")]
         public async Task<IActionResult> ManageRoles(List<RolesInUser> viewmodel, string Id)
         {
-            //todo 7.15
+            
             var user = await userManager.FindByIdAsync(Id);
 
             //reset all the roles first
