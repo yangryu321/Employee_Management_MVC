@@ -59,7 +59,7 @@ namespace EmployeeManagementSystem.Controllers
         //}
 
 
-
+        //Todo delete button in detail view is not working
         public IActionResult Details(string id)
         {
             int decrypedid = Convert.ToInt32(protector.Unprotect(id));
@@ -101,7 +101,8 @@ namespace EmployeeManagementSystem.Controllers
                 };
 
                 employeeRepository.Add(employee);
-                return RedirectToAction("Details", new { ID = employee.Id });
+                var EncrypedId = protector.Protect(employee.Id.ToString());
+                return RedirectToAction("Details", new { ID = EncrypedId });
 
             }
             return View();
