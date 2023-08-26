@@ -62,6 +62,7 @@ namespace EmployeeManagementSystem.Controllers
         [HttpGet]
         public IActionResult ListUsers()
         {
+            //todo Might need to delete the database and build it from scrach
             var users = userManager.Users.ToList();
             return View(users);
         }
