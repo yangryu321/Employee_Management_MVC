@@ -60,6 +60,7 @@ namespace EmployeeManagementSystem.Controllers
 
 
         //Todo delete button in detail view is not working
+        //deploy website next
         public IActionResult Details(string id)
         {
             int decrypedid = Convert.ToInt32(protector.Unprotect(id));
